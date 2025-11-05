@@ -16,51 +16,22 @@ jobs:
       K8S_NAMESPACE: default
 
     steps:
-      # 저장소 체크아웃
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # kubectl 설치
       - name: Install kubectl
         run: |
-          sudo apt-get update
+          sudo apt-get update -y
           sudo apt-get install -y kubectl
 
-      # 쿠버네티스 인증 설정
       - name: Configure Kubernetes access
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${K8S_CLUSTER_CA}" | base64 --decode > "$HOME/.kube/ca.crt"
+        run: bash scripts/configure_kube.sh
 
-          cat > "$HOME/.kube/config" <<'EOF'
-apiVersion: v1
-kind: Config
-clusters:
-- cluster:
-    certificate-authority: "/home/runner/.kube/ca.crt"
-    server: ${K8S_API_SERVER}
-  name: github-actions-cluster
-contexts:
-- context:
-    cluster: github-actions-cluster
-    user: github-actions
-    namespace: ${K8S_NAMESPACE}
-  name: github-actions-context
-current-context: github-actions-context
-users:
-- name: github-actions
-  user:
-    token: ${GITHUB_TOKEN}
-EOF
-
-      #  연결 확인
       - name: Verify connection
         run: |
           kubectl cluster-info
           kubectl get nodes
 
-      #  Hello Pod 배포
       - name: Launch hello Pod
         run: |
-          kubectl apply -f kube/hello-pod.yaml
-
+          kubectl apply -f kube/hello.yaml
