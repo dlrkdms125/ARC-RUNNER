@@ -29,30 +29,32 @@ jobs:
           sudo apt-get install -y kubectl
 # 쿠버네티스 접속 설정
 # github actions vm에 ~/.kube/config 파일을 생성해서 k8s api서버와 통신
-      - name: Configure Kubernetes access
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${K8S_CLUSTER_CA}" | base64 --decode > $HOME/.kube/ca.crt
-          cat <<EOF > $HOME/.kube/config
-          apiVersion: v1
-          kind: Config
-          clusters:
-          - cluster:
-              certificate-authority: $HOME/.kube/ca.crt
-              server: ${K8S_API_SERVER}
-            name: github-actions-cluster
-          contexts:
-          - context:
-              cluster: github-actions-cluster
-              user: github-actions
-              namespace: ${K8S_NAMESPACE}
-            name: github-actions-context
-          current-context: github-actions-context
-          users:
-          - name: github-actions
-            user:
-              token: ${GITHUB_TOKEN}
-          EOF
+- name: Configure Kubernetes access
+  run: |
+    mkdir -p $HOME/.kube
+    echo "${K8S_CLUSTER_CA}" | base64 --decode > "$HOME/.kube/ca.crt"
+
+    cat > "$HOME/.kube/config" <<EOF
+apiVersion: v1
+kind: Config
+clusters:
+- cluster:
+    certificate-authority: "$HOME/.kube/ca.crt"
+    server: ${K8S_API_SERVER}
+  name: github-actions-cluster
+contexts:
+- context:
+    cluster: github-actions-cluster
+    user: github-actions
+    namespace: ${K8S_NAMESPACE}
+  name: github-actions-context
+current-context: github-actions-context
+users:
+- name: github-actions
+  user:
+    token: ${GITHUB_TOKEN}
+EOF
+
 # 파드 실행
       - name: Launch hello Pod
         run: |
