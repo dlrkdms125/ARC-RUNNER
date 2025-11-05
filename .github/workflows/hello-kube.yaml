@@ -1,17 +1,14 @@
-name: hello-kube kaeunlee
+name: hello-kube
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch: 
+    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   deploy:
-    name: hello-kube
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
 
-# 깃헙 시크릿에서 가져오는 값들
     env:
       K8S_API_SERVER: ${{ secrets.K8S_API_SERVER }}
       K8S_CLUSTER_CA: ${{ secrets.K8S_CLUSTER_CA }}
@@ -19,22 +16,23 @@ jobs:
       K8S_NAMESPACE: default
 
     steps:
+      # 저장소 체크아웃
       - name: Checkout repository
         uses: actions/checkout@v4
 
-# kubectl 설치
+      # kubectl 설치
       - name: Install kubectl
         run: |
           sudo apt-get update
           sudo apt-get install -y kubectl
-# 쿠버네티스 접속 설정
-# github actions vm에 ~/.kube/config 파일을 생성해서 k8s api서버와 통신
-- name: Configure Kubernetes access
-  run: |
-    mkdir -p $HOME/.kube
-    echo "${K8S_CLUSTER_CA}" | base64 --decode > "$HOME/.kube/ca.crt"
 
-    cat > "$HOME/.kube/config" <<EOF
+      # kubeconfig 생성 및 인증 설정
+      - name: Configure Kubernetes access
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${K8S_CLUSTER_CA}" | base64 --decode > "$HOME/.kube/ca.crt"
+
+          cat > "$HOME/.kube/config" <<EOF
 apiVersion: v1
 kind: Config
 clusters:
@@ -55,18 +53,24 @@ users:
     token: ${GITHUB_TOKEN}
 EOF
 
-# 파드 실행
+      # 연결 확인
+      - name: Verify connection
+        run: |
+          kubectl cluster-info
+          kubectl get nodes
+
+      # Hello Pod 실행
       - name: Launch hello Pod
         run: |
           cat <<EOF | kubectl apply -f -
-          apiVersion: v1
-          kind: Pod
-          metadata:
-            name: hello
-          spec:
-            containers:
-              - name: hello
-                image: busybox
-                command: ["sh", "-c", "echo Hello from GitHub Actions && sleep 3600"]
-          EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hello
+spec:
+  containers:
+  - name: hello
+    image: busybox
+    command: ["sh", "-c", "echo Hello from GitHub Actions && sleep 3600"]
+EOF
 
