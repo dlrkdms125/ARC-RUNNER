@@ -67,7 +67,7 @@ def launch_pod(namespace="default"):
 
     v1.delete_namespaced_pod(name="hello", namespace=namespace)
     print("파드 삭제 완료")
-
+    print("테스트")
 
 if __name__ == "__main__":
     launch_pod()
