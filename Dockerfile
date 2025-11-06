@@ -3,7 +3,7 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY app.py .
+COPY hello_kube.py .
 
-CMD ["python", "app.py"]
+CMD ["python", "hello_kube.py"]
 
