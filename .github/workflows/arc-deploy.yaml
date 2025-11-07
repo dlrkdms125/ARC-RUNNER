@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # GitHub Actions에서 실행되는 기본 환경
+    runs-on: ubuntu-latest
 
     env:
       K8S_API_SERVER: ${{ secrets.K8S_API_SERVER }}
@@ -40,26 +40,17 @@ jobs:
           echo "Checking nodes..."
           kubectl get nodes
 
-      #  최신 charts repo 사용
-      - name: Add ARC Helm repo (new charts path)
-        run: |
-          helm repo add actions-runner-controller https://actions-runner-controller.github.io/charts
-          helm repo update
-          echo "Available charts:"
-          helm search repo actions-runner-controller
-
-      # ARC Controller 설치
+      # helm repo add 제거됨 (OCI 사용)
       - name: Deploy ARC Controller (gha-runner-scale-set-controller)
         run: |
-          helm upgrade --install github-arc actions-runner-controller/gha-runner-scale-set-controller \
+          helm upgrade --install github-arc oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller \
             -n arc \
             --create-namespace \
             -f values.yaml
 
-      # ARC RunnerSet 설치
       - name: Deploy ARC RunnerSet (gha-runner-scale-set)
         run: |
-          helm upgrade --install arc-scale actions-runner-controller/gha-runner-scale-set \
+          helm upgrade --install arc-scale oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set \
             -n arc \
             --create-namespace \
             -f values.yaml \
