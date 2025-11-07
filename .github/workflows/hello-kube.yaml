@@ -1,4 +1,4 @@
-name: hello-kube
+name: Deploy Hello-Kube
 
 on:
   push:
@@ -7,12 +7,11 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: arc-scale
 
     env:
       K8S_API_SERVER: ${{ secrets.K8S_API_SERVER }}
       K8S_CLUSTER_CA: ${{ secrets.K8S_CLUSTER_CA }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       K8S_NAMESPACE: default
 
     steps:
@@ -25,13 +24,20 @@ jobs:
           sudo apt-get install -y kubectl
 
       - name: Configure Kubernetes access
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: bash scripts/configure_kube.sh
 
       - name: Verify connection
         run: |
+          echo "🔍 Checking kubeconfig context..."
+          kubectl config current-context
+          echo "🔍 Checking cluster info..."
           kubectl cluster-info
+          echo "🔍 Checking nodes..."
           kubectl get nodes
 
       - name: Launch hello Pod
         run: |
           kubectl apply -f kube/hello.yaml
+
