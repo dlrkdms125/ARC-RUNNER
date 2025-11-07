@@ -22,26 +22,26 @@
     1-2) VM 내의 도커 컨테이너에 minikube로 쿠버네티스 클러스터 생성    
      `minikube start --driver=docker --cpus=4 --memory=4f`  
     1-3) kubectl 설치
-      
-   2. hello-kube 쿠버네티스 API/SDK로 hello라는 파드 생성
 
-   3. github actions runner controller(ARC) 설치  
-      3-1) helm으로 설치 준비  
+   2. github actions runner controller(ARC) 설치  
+      2-1) helm으로 설치 준비  
       `helm repo add actions-runner-controller https://actions-runner-controller.github.io/actions-runner-controller`  
-      3-2) GitApp 셍성  
+      2-2) GitApp 셍성  
       App을 레포지토리에 추가하고 Client ID, Client Secret, Private Key 생성  
-      3-3) values.yaml 파일 작성  
+      2-3) values.yaml 파일 작성  
       `helm upgrade --install github-arc actions-runner-controller/gha-runner-scale-set-controller \  
 -f values.yaml -n arc --create-namespace`  <br>
+      2-4) cert-manager 설치 및 ARC Controller & RunnerSet 설치
+      2-5) ArgoCD로 GitOps 관리 (arc-app.yaml)  
+   3. hello-kube 쿠버네티스 API/SDK로 hello라는 파드 생성   
    4. github actions이 hello pod 실행  
        4-1) configure_kube.sh를 통해 kubeconfig 생성  
        4-2) Github token으로 인증  
        4-3) hello.yaml을 클러스터에 적용
-      
    5. docker 이미지 자동 빌드  
        5-1) Dockerfile에 기제된 hello_kube.py을 기반으로 Docker기반으로 이미지 생성하고, Github Actions에 자동 푸시
   
    
 
 ### 전체 실행 흐름 요약
- main 브랜치에 push 하면 Github Action이 docker-build.yaml을 실행하고, 
+ main 브랜치에 push 하면 GitHub Actions가 자동으로 실행되며, 먼저 docker-build.yaml이 hello_kube.py를 기반으로 Docker 이미지를 빌드하고 DockerHub에 푸시한다. 이후 arc-deploy.yaml이 실행되어 Helm을 통해 Minikube 클러스터에 GitHub Actions Runner Controller(ARC)를 배포하고 cert-manager 및 RunnerSet을 설정한다. 다음으로 hello-kube.yaml이 실행되어 configure_kube.sh를 이용해 kubeconfig를 생성하고 GitHub Token으로 쿠버네티스 API에 인증한 뒤, hello.yaml을 클러스터에 적용해 “Hello from GitHub Actions”를 출력하는 파드를 생성한다. 마지막으로 ArgoCD(arc-app.yaml)가 ARC 상태를 GitOps 방식으로 관리하며, 저장소 변경 시 자동 동기화 및 self-heal을 수행한다.
