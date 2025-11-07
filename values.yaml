@@ -7,7 +7,7 @@ githubConfigSecret:
 
 runnerScaleSetName: "arc-scale"
 
-minRunners: 1
+minRunners: 3
 maxRunners: 5
 
 template:
