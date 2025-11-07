@@ -40,12 +40,15 @@ jobs:
           echo "Checking nodes..."
           kubectl get nodes
 
-      - name: Add ARC Helm repo
+      #  최신 charts repo 사용
+      - name: Add ARC Helm repo (new charts path)
         run: |
-          helm repo add actions-runner-controller https://actions-runner-controller.github.io/actions-runner-controller
+          helm repo add actions-runner-controller https://actions-runner-controller.github.io/charts
           helm repo update
+          echo "Available charts:"
           helm search repo actions-runner-controller
 
+      # ARC Controller 설치
       - name: Deploy ARC Controller (gha-runner-scale-set-controller)
         run: |
           helm upgrade --install github-arc actions-runner-controller/gha-runner-scale-set-controller \
@@ -53,9 +56,10 @@ jobs:
             --create-namespace \
             -f values.yaml
 
+      # ARC RunnerSet 설치
       - name: Deploy ARC RunnerSet (gha-runner-scale-set)
         run: |
-          helm upgrade --install arc-scale oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set \
+          helm upgrade --install arc-scale actions-runner-controller/gha-runner-scale-set \
             -n arc \
             --create-namespace \
             -f values.yaml \
