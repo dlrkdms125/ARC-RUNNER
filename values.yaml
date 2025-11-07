@@ -1,36 +1,9 @@
 githubConfigUrl: "https://github.com/dlrkdms125/ARC-RUNNER"
 
 githubConfigSecret:
-  github_app_id: "2226790"
-  github_app_installation_id: "92838008"
-  github_app_private_key: |
-    -----BEGIN RSA PRIVATE KEY-----
-    MIIEowIBAAKCAQEA/KzDhrviEZZGPxiT4bs1VjMGtR71ue+7ijiHsMbZh37X3KKV
-    YrRPUutjCLahi7KYvJDguSg8PmEqae/Dq2KJ+Je2TPmajooIYHfRca3QeQ4oFoMf
-    JJRJOa0twJZ/OqsjQqUTae5ts867J5RAdY8iGeMmDVvUMTVxkWaB0ctm5cB0JGsF
-    ulaQhwE4UOZ6s0+PaioYld/gUlywYdEP79uECEJJKLytypxYPh7a+tL7CsT3ltS/
-    iB7olmjqN+5FJrv4aKe2ZypPNkvseqWmVoqyhqNuP/o4/mJ9PzTP8fngigJZ8dvr
-    WtMmuGe7S82Excf7XCXE/Pcn/w/i7mPRURl0oQIDAQABAoIBADYzMPXz03iGTac3
-    NHGVYMmOxH+RlpA99nKd0a1/2iWQdelkDrtPhjx5NZMm6dw3gT/hq/LLyLBw01JK
-    FiTrTEFA+d/lItw0i7t1uD20VSXCfaLmmYWVMWfn2AqZvczt7PBczJ9Kf8m0LL0+
-    td0ByQTYjs8KxaeQmT3hSTOhd/8MLkBcpba4O2fGLUOYPXCJaAl5bWWvFUEg00i6
-    c3zcbaaf/QaBPLFy9RnxJiDG59m2xIEoViXHEeJHcl2+snUPAm7WymI12WAzZkEE
-    nP6ij39UHGaO2GSJ1PJKUvt7CX/W1xxSa1AAA43uqW5pbb3aSkhj2tlIPu+y3oth
-    7uTf0eECgYEA/9mPEmpdnVPZ2Rl2/g4Y778owJLZnF7/lNZX1jIcoLB6l4BWhCnH
-    1iikbI12QsLQ58puY/s75do3DlTtoAmvAw15tt0uO9MeeqkBm/uZ//rN/+YZ49wV
-    5oHis3kmxGk6V8mz5hU+4dOfVPdESjDmJRSgUI6PnZUtvyxDyk99/ZUCgYEA/NK6
-    VTjrU5GG66iHwrRP/5Vq6TyYu1VVYQHFtGsJP95Jphp/9oSJp2YJMtgzhEw0DHL4
-    2ov0PmdiLV/L3jBc+84saOv89RWpFYWK36XK4/iOYSeX3/GjIie3631pzNxp6reg
-    GxR/Hey38wDTc3vJsA/U8DQ4jd/js4rB1rv+n90CgYAfthyIoMxnoqv+v6xDAwZO
-    OPhZHhqAyjmNfh+2+dEYjac0PgD7Mp6FSdZPah09Wx4/jJSwKcSb0bc/PIGTc3/Q
-    tgvfAX0ohxthAq+jYMUOuExuKlwNJQtF3dV2f06xy4Uiumpk2z9HCE7YXimFtJfi
-    ArN4KKNeWc4owtjIK6AnHQKBgAXQRq6c/3RNfV+/4VdN1CUZZ3rzhMOSA8OWSdiL
-    OYw5bVIfe9/MTmoGA6IirJSXN/8tSaGk5DnnIK/Qaxyx2gGETSsgehGcrOWsy3O3
-    GUJCvetoAKsKoGixpx4IJT2rt9fI3yqgPwgOIHC7DSGzsACXbJsVaFOC2XaQc0Kf
-    0gwVAoGBAIoJ9di9em8mJmzQCWe7P160D/ym+wscNSfhmH8wKQbFyK3GgcdemWjJ
-    /cijLz1QP4Zqf1LGrPzamiBFmtTfnU88loGxORGy6qGKb/VthilVYuCx5XMoHP07
-    PVFBQzR8B7PsGIb/dfKAIIU+tI3s2ffNqsE78+xAvZL+yGpsr1XD
-    -----END RSA PRIVATE KEY-----
+  github_app_id: ""
+  github_app_installation_id: ""
+  github_app_private_key: ""
 
 runnerScaleSetName: "arc-scale"
 

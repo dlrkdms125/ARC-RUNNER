@@ -1,0 +1,39 @@
+name: Deploy ARC Helm Chart
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up kubectl and helm
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y kubectl
+          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+          chmod 700 get_helm.sh
+          ./get_helm.sh
+
+      - name: Configure kubeconfig
+        run: bash scripts/configure_kube.sh
+
+      - name: Verify cluster connection
+        run: kubectl cluster-info
+
+      - name: Deploy ARC Helm Chart
+        run: |
+          helm upgrade --install github-arc actions-runner-controller/gha-runner-scale-set-controller \
+            -f values.yaml \
+            -n arc \
+            --create-namespace \
+            --set githubConfigSecret.github_app_id=${{ secrets.APP_ID }} \
+            --set githubConfigSecret.github_app_installation_id=${{ secrets.APP_INSTALLATION_ID }} \
+            --set githubConfigSecret.github_app_private_key="${{ secrets.APP_PRIVATE_KEY }}"
+
